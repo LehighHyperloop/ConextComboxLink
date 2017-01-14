@@ -5,7 +5,7 @@ import paho.mqtt.client as mqtt
 import requests
 import time
 
-SUBSYSTEM = "subsystem/inverter"
+SUBSYSTEM = "subsystem/inverters"
 
 COMBOX_IP = "192.168.0.150"
 COMBOX_USER = "admin"
