@@ -34,30 +34,38 @@ def send_inverter_json(fields):
     inverter1_json = {}
     inverter2_json = {}
 
-    for i in inverter1_data:
-        i = i.replace("(400858)", "")
-        halves = i.split("=")
-        inverter1_json[halves[0]] = halves[1]
-    for i in inverter2_data:
-        i = i.replace("(385892)", "")
-        halves = i.split("=")
-        inverter2_json[halves[0]] = halves[1]
-
     inverter_json = {
         "state": "RUNNING",
-        "inverters": [
-            {
-                "voltage": inverter1_json["XW.VDCIN"],
-                "wattage": inverter1_json["XW.PACLOAD2"],
-                "temp": inverter1_json["XW.TBATT"],
-            },
-            {
-                "voltage": inverter2_json["XW.VDCIN"],
-                "wattage": inverter2_json["XW.PACLOAD2"],
-                "temp": inverter2_json["XW.TBATT"],
-            }
-        ]
+        "inverters": { "0": {}, "1": {} }
     }
+
+    try:
+        for i in inverter1_data:
+            i = i.replace("(400858)", "")
+            halves = i.split("=")
+            inverter1_json[halves[0]] = halves[1]
+
+        inverter_json["inverters"]["0"] = {
+            "voltage": inverter1_json["XW.VDCIN"],
+            "wattage": inverter1_json["XW.PACLOAD2"],
+            "temp": inverter1_json["XW.TBATT"],
+        }
+    except:
+        pass
+
+    try:
+        for i in inverter2_data:
+            i = i.replace("(385892)", "")
+            halves = i.split("=")
+            inverter2_json[halves[0]] = halves[1]
+
+        inverter_json["inverters"]["1"] = {
+            "voltage": inverter2_json["XW.VDCIN"],
+            "wattage": inverter2_json["XW.PACLOAD2"],
+            "temp": inverter2_json["XW.TBATT"],
+        }
+    except:
+        pass
 
     print inverter_json, "\n\n"
     client.publish(SUBSYSTEM, json.dumps(inverter_json))
