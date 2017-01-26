@@ -72,7 +72,6 @@ def send_inverter_json(fields):
 
 #scrape status from combox page and send it out
 def logic_loop(client):
-    client.publish(SUBSYSTEM, json.dumps(e_state))
     values_URL = "http://" + COMBOX_IP +"/gethandler.json?name=XBGATEWAY.VARLIST"
     values = SESSION.get(values_URL).content
     values = values.replace("&#0D;&#0A", "")
