@@ -43,12 +43,24 @@ def send_inverter_json(fields):
         halves = i.split("=")
         inverter2_json[halves[0]] = halves[1]
 
-    inverter_json["inverter1"] = inverter1_json
-    inverter_json["inverter2"] = inverter2_json
+    inverter_json = {
+        "state": "RUNNING",
+        "inverters": [
+            {
+                "voltage": inverter1_json["XW.VDCIN"],
+                "wattage": inverter1_json["XW.PACLOAD2"],
+                "temp": inverter1_json["XW.TBATT"],
+            },
+            {
+                "voltage": inverter2_json["XW.VDCIN"],
+                "wattage": inverter2_json["XW.PACLOAD2"],
+                "temp": inverter2_json["XW.TBATT"],
+            }
+        ]
+    }
 
-    inverter_json = json.dumps(inverter_json)
-    # print inverter_json, "\n\n"
-    client.publish(SUBSYSTEM, inverter_json)
+    print inverter_json, "\n\n"
+    client.publish(SUBSYSTEM, json.dumps(inverter_json))
 
 #scrape status from combox page and send it out
 def logic_loop(client):
